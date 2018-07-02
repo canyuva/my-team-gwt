@@ -63,16 +63,30 @@ public class InputPanel extends VerticalPanel {
         FlexTable ft = new FlexTable();
         ft.setCellSpacing(5);
 
+        TextBox nameTB = new TextBox();
+        TextBox surnameTB = new TextBox();
+        TextBox cityTB = new TextBox();
+        Button submit = new Button("Submit");
+        RadioButton rb_male = new RadioButton("sex", "Male");
+        RadioButton rb_female = new RadioButton("sex", "Female");
+        FlowPanel gender = new FlowPanel();
+        gender.add(rb_male);
+        gender.add(rb_female);
+
+
         ft.setWidget(1, 1, new Label("Name :"));
-        ft.setWidget(1, 2, new TextBox());
+        ft.setWidget(1, 2, nameTB);
         ft.setWidget(2, 1, new Label("Surname :"));
-        ft.setWidget(2, 2, new TextBox());
+        ft.setWidget(2, 2, surnameTB);
         ft.setWidget(3, 1, new Label("City :"));
-        ft.setWidget(3, 2, new TextBox());
-        ft.setWidget(4, 1, new Label("Category :"));
-        ft.setWidget(4, 2, catListBox);
-        ft.setWidget(5, 1, new Label("Team :"));
-        ft.setWidget(5, 2, teamListBox);
+        ft.setWidget(3, 2, cityTB);
+        ft.setWidget(4, 1, new Label("Gender :"));
+        ft.setWidget(4, 2, gender);
+        ft.setWidget(5, 1, new Label("Category :"));
+        ft.setWidget(5, 2, catListBox);
+        ft.setWidget(6, 1, new Label("Team :"));
+        ft.setWidget(6, 2, teamListBox);
+        ft.setWidget(7, 3, submit);
 
 
         this.add(ft);
