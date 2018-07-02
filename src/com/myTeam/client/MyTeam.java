@@ -12,7 +12,6 @@ public class MyTeam implements EntryPoint {
     public void onModuleLoad() {
         InputPanel ipanel = new InputPanel();
         ipanel.init();
-        //ipanel.add(new Button("asdsd"));
 
         RootPanel.get("Panel").add(ipanel);
 
