@@ -917,65 +917,114 @@
     </collation>
     <table id="230" parent="7" name="categories"/>
     <table id="231" parent="7" name="teams"/>
-    <column id="232" parent="230" name="cat_id">
+    <table id="232" parent="7" name="users"/>
+    <column id="233" parent="230" name="cat_id">
       <Position>1</Position>
       <DataType>int(11)|0s</DataType>
       <NotNull>1</NotNull>
       <SequenceIdentity>1</SequenceIdentity>
       <ColumnKind>normal</ColumnKind>
     </column>
-    <column id="233" parent="230" name="name">
+    <column id="234" parent="230" name="name">
       <Position>2</Position>
       <DataType>varchar(30)|0s</DataType>
       <ColumnKind>normal</ColumnKind>
     </column>
-    <key id="234" parent="230" name="PRIMARY">
+    <key id="235" parent="230" name="PRIMARY">
       <NameSurrogate>1</NameSurrogate>
       <ColNames>cat_id</ColNames>
       <Primary>1</Primary>
     </key>
-    <column id="235" parent="231" name="team_id">
+    <column id="236" parent="231" name="team_id">
       <Position>1</Position>
       <DataType>int(11)|0s</DataType>
       <NotNull>1</NotNull>
       <SequenceIdentity>1</SequenceIdentity>
       <ColumnKind>normal</ColumnKind>
     </column>
-    <column id="236" parent="231" name="name">
+    <column id="237" parent="231" name="name">
       <Position>2</Position>
       <DataType>varchar(30)|0s</DataType>
       <ColumnKind>normal</ColumnKind>
     </column>
-    <column id="237" parent="231" name="city">
+    <column id="238" parent="231" name="city">
       <Position>3</Position>
       <DataType>varchar(50)|0s</DataType>
       <ColumnKind>normal</ColumnKind>
     </column>
-    <column id="238" parent="231" name="ranking">
+    <column id="239" parent="231" name="ranking">
       <Position>4</Position>
       <DataType>int(11)|0s</DataType>
       <ColumnKind>normal</ColumnKind>
     </column>
-    <column id="239" parent="231" name="category_id">
+    <column id="240" parent="231" name="category_id">
       <Position>5</Position>
       <DataType>int(11)|0s</DataType>
       <NotNull>1</NotNull>
       <ColumnKind>normal</ColumnKind>
     </column>
-    <index id="240" parent="231" name="category_id">
+    <index id="241" parent="231" name="category_id">
       <ColNames>category_id</ColNames>
       <Type>btree</Type>
     </index>
-    <key id="241" parent="231" name="PRIMARY">
+    <key id="242" parent="231" name="PRIMARY">
       <NameSurrogate>1</NameSurrogate>
       <ColNames>team_id</ColNames>
       <Primary>1</Primary>
     </key>
-    <foreign-key id="242" parent="231" name="teams_ibfk_1">
+    <foreign-key id="243" parent="231" name="teams_ibfk_1">
       <ColNames>category_id</ColNames>
       <RefSchemaName>teamdb</RefSchemaName>
       <RefTableName>categories</RefTableName>
       <RefColNames>cat_id</RefColNames>
+    </foreign-key>
+    <column id="244" parent="232" name="user_id">
+      <Position>1</Position>
+      <DataType>int(11)|0s</DataType>
+      <NotNull>1</NotNull>
+      <SequenceIdentity>1</SequenceIdentity>
+      <ColumnKind>normal</ColumnKind>
+    </column>
+    <column id="245" parent="232" name="name">
+      <Position>2</Position>
+      <DataType>varchar(30)|0s</DataType>
+      <ColumnKind>normal</ColumnKind>
+    </column>
+    <column id="246" parent="232" name="surname">
+      <Position>3</Position>
+      <DataType>varchar(30)|0s</DataType>
+      <ColumnKind>normal</ColumnKind>
+    </column>
+    <column id="247" parent="232" name="city">
+      <Position>4</Position>
+      <DataType>varchar(30)|0s</DataType>
+      <ColumnKind>normal</ColumnKind>
+    </column>
+    <column id="248" parent="232" name="gender">
+      <Position>5</Position>
+      <DataType>varchar(10)|0s</DataType>
+      <ColumnKind>normal</ColumnKind>
+    </column>
+    <column id="249" parent="232" name="team_id">
+      <Position>6</Position>
+      <DataType>int(11)|0s</DataType>
+      <NotNull>1</NotNull>
+      <ColumnKind>normal</ColumnKind>
+    </column>
+    <index id="250" parent="232" name="team_id">
+      <ColNames>team_id</ColNames>
+      <Type>btree</Type>
+    </index>
+    <key id="251" parent="232" name="PRIMARY">
+      <NameSurrogate>1</NameSurrogate>
+      <ColNames>user_id</ColNames>
+      <Primary>1</Primary>
+    </key>
+    <foreign-key id="252" parent="232" name="users_ibfk_1">
+      <ColNames>team_id</ColNames>
+      <RefSchemaName>teamdb</RefSchemaName>
+      <RefTableName>teams</RefTableName>
+      <RefColNames>team_id</RefColNames>
     </foreign-key>
   </database-model>
 </dataSource>

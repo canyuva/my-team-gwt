@@ -1,6 +1,8 @@
 package com.myTeam.client;
 
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.*;
 
@@ -17,7 +19,8 @@ public class InputPanel extends VerticalPanel {
 
         ListBox catListBox = new ListBox();
         ListBox teamListBox = new ListBox();
-        teamListBox.setSelectedIndex(1);
+        catListBox.setSelectedIndex(1);
+
 
         mtAsync.getCategories(new AsyncCallback<List<String>>() {
             @Override
@@ -58,23 +61,59 @@ public class InputPanel extends VerticalPanel {
                         e.printStackTrace();
                     }
                 }
-
         );
+
 
 
         FlexTable ft = new FlexTable();
         ft.setCellSpacing(5);
-
+        Button submit = new Button("Submit");
         TextBox nameTB = new TextBox();
         TextBox surnameTB = new TextBox();
         TextBox cityTB = new TextBox();
-        Button submit = new Button("Submit");
-        RadioButton rb_male = new RadioButton("sex", "Male");
-        RadioButton rb_female = new RadioButton("sex", "Female");
+
+        RadioButton rb_male = new RadioButton("male", "Male");
+        RadioButton rb_female = new RadioButton("female", "Female");
         FlowPanel gender = new FlowPanel();
         gender.add(rb_male);
         gender.add(rb_female);
 
+        GWT.log(""+teamListBox.getSelectedIndex());
+
+
+        submit.addClickHandler(new ClickHandler() {
+            @Override
+            public void onClick(ClickEvent event) {
+
+                String genderText="";
+                if(rb_female.isChecked()){
+                    genderText = "Female";
+                }
+                if(rb_male.isChecked()){
+                    genderText = "Male";
+                }
+
+
+
+                int selectedTeamIndex = teamListBox.getSelectedIndex() + 1;
+
+                GWT.log(nameTB.getValue()+" "+surnameTB.getValue()+" "+cityTB.getValue()+" "+genderText+
+                " "+selectedTeamIndex+" ");
+
+                mtAsync.sendInformation(nameTB.getValue(), surnameTB.getValue(),
+                        cityTB.getValue(), genderText, selectedTeamIndex, new AsyncCallback<String>() {
+                            @Override
+                            public void onFailure(Throwable caught) {
+                                System.out.println("Error while inserting..");
+                            }
+
+                            @Override
+                            public void onSuccess(String result) {
+                                System.out.println(result);
+                            }
+                        });
+            }
+        });
 
         ft.setWidget(1, 1, new Label("Name :"));
         ft.setWidget(1, 2, nameTB);

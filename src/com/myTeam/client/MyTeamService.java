@@ -12,6 +12,7 @@ public interface MyTeamService extends RemoteService {
     String getMessage(String msg);
     List<String> getTeamswithCategory(int selectedIndex) throws Exception;
     List<String> getCategories() throws Exception;
+    String sendInformation(String name, String surname, String city, String gender, int team_id) throws Exception;
 
 
     public static class App {
