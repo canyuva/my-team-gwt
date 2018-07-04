@@ -11,7 +11,11 @@ public class MyTeam implements EntryPoint {
     @Override
     public void onModuleLoad() {
         InputPanel ipanel = new InputPanel();
-        ipanel.init();
+        try {
+            ipanel.init();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
         RootPanel.get("Panel").add(ipanel);
 

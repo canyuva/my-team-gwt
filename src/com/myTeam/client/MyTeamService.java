@@ -10,8 +10,8 @@ import java.util.List;
 public interface MyTeamService extends RemoteService {
     // Sample interface method of remote interface
     String getMessage(String msg);
-    List<String> getTeamswithCategory(int selectedIndex);
-    List<String> getCategories();
+    List<String> getTeamswithCategory(int selectedIndex) throws Exception;
+    List<String> getCategories() throws Exception;
 
 
     public static class App {

@@ -1,11 +1,13 @@
 package com.myTeam.server;
 
+import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.server.rpc.RemoteServiceServlet;
 import com.myTeam.client.MyTeamService;
 
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Logger;
 
 public class MyTeamServiceImpl extends RemoteServiceServlet implements MyTeamService {
     // Implementation of sample interface method
@@ -15,92 +17,58 @@ public class MyTeamServiceImpl extends RemoteServiceServlet implements MyTeamSer
 
     public Connection getConnection() throws Exception {
         String driver = "com.mysql.jdbc.Driver";
-        String url = "jdbc:mysql://localhost:3306/teamdb";
-        String username = "admin";
-        String password = "8520";
+        String url = "jdbc:mysql://localhost:PORT/DB_NAME";
+        String username = "USERNAME";
+        String password = "PASSWORD";
         Class.forName(driver);
         Connection conn = DriverManager.getConnection(url, username, password);
         return conn;
     }
 
-    public List<String> getTeamswithCategory(int selectedIndex){
-        try {
-            conn = getConnection();
-            String query = "SELECT name FROM teams WHERE category_id="+selectedIndex;
-            ps = conn.prepareStatement(query);
-            rs = ps.executeQuery();
-
-            List<String> teamList = new ArrayList<String>();
-
-            while(rs.next()){
-                String result = rs.getString(1);
-                teamList.add(result);
-            }
-
-            return teamList;
-
-        } catch (Exception e) {
-            e.printStackTrace();
-            System.out.println("Error from getting team list! SERVER");
-        }finally {
-//            try {
-//                ps.close();
-//            } catch (SQLException e) {
-//                e.printStackTrace();
-//            }
-//            try {
-//                rs.close();
-//            } catch (SQLException e) {
-//                e.printStackTrace();
-//            }
-//            try {
-//                conn.close();
-//            } catch (SQLException e) {
-//                e.printStackTrace();
-//            }
-        }
-
-        return null;
-    }
-
-    public List<String> getCategories(){
-        try {
-            conn = getConnection();
-            String query = "SELECT name FROM categories";
-            ps = conn.prepareStatement(query);
-            rs = ps.executeQuery();
-
-            List<String> categoryList = new ArrayList<String>();
-
-            while(rs.next()){
+    public List<String> getCategories() throws Exception {
+        String query = "SELECT name FROM categories";
+        List<String> categoryList = new ArrayList<>();
+        try (Connection conn = getConnection();
+             PreparedStatement ps = conn.prepareStatement(query);
+             ResultSet rs = ps.executeQuery()) {
+            while (rs.next()) {
                 String result = rs.getString(1);
                 categoryList.add(result);
-            }
-
-            return categoryList;
-
-        } catch (Exception e) {
-            e.printStackTrace();
-            System.out.println("Error from getting category list! SERVER");
-        }finally {
-            try {
-                ps.close();
-            } catch (SQLException e) {
-                e.printStackTrace();
-            }
-            try {
-                rs.close();
-            } catch (SQLException e) {
-                e.printStackTrace();
-            }
-            try {
-                conn.close();
-            } catch (SQLException e) {
-                e.printStackTrace();
+                GWT.log(categoryList.toString());
             }
         }
 
-        return null;
+
+        return categoryList;
+    }
+
+    public List<String> getTeamswithCategory(int selectedIndex) throws Exception {
+        List<String> teamList = new ArrayList<>();
+        try (Connection conn = getConnection();
+             PreparedStatement ps = psTeamswithCategory(selectedIndex, conn);
+             ResultSet rs = ps.executeQuery()) {
+            while (rs.next()) {
+                String result = rs.getString(1);
+                teamList.add(result);
+                GWT.log(teamList.toString());
+            }
+        }
+        return teamList;
+    }
+
+    private PreparedStatement psTeamswithCategory(int selectedIndex, Connection conn) throws SQLException {
+        String query = "SELECT name FROM teams WHERE category_id= ?";
+        PreparedStatement ps = conn.prepareStatement(query);
+        ps.setInt(1, selectedIndex);
+        return ps;
+    }
+
+
+    public class AutoClose implements AutoCloseable {
+        @Override
+        public void close() throws Exception {
+            System.out.println("Resource closed..");
+        }
     }
 
     @Override

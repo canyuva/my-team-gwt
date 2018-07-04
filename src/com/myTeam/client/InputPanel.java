@@ -1,8 +1,6 @@
 package com.myTeam.client;
 
 import com.google.gwt.core.client.GWT;
-import com.google.gwt.event.dom.client.ChangeEvent;
-import com.google.gwt.event.dom.client.ChangeHandler;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.*;
 
@@ -15,10 +13,11 @@ public class InputPanel extends VerticalPanel {
     private List<String> categoryList;
     int selectedIndex = 1;
 
-    void init() {
+    void init() throws Exception {
 
         ListBox catListBox = new ListBox();
         ListBox teamListBox = new ListBox();
+        teamListBox.setSelectedIndex(1);
 
         mtAsync.getCategories(new AsyncCallback<List<String>>() {
             @Override
@@ -40,21 +39,24 @@ public class InputPanel extends VerticalPanel {
                     teamListBox.clear();
                     selectedIndex = catListBox.getSelectedIndex();
                     selectedIndex = selectedIndex + 1;
-                    mtAsync.getTeamswithCategory(selectedIndex, new AsyncCallback<List<String>>() {
-                        @Override
-                        public void onFailure(Throwable caught) {
-                            GWT.log("Error while getting team list!");
-                        }
-
-                        @Override
-                        public void onSuccess(List<String> result) {
-                            setTeamList(result);
-                            for (int i = 0; i < teamList.size(); i++) {
-                                teamListBox.addItem(getTeamList().get(i));
+                    try {
+                        mtAsync.getTeamswithCategory(selectedIndex, new AsyncCallback<List<String>>() {
+                            @Override
+                            public void onFailure(Throwable caught) {
+                                GWT.log("Error while getting team list!");
                             }
-                            GWT.log(result.toString());
-                        }
-                    });
+
+                            @Override
+                            public void onSuccess(List<String> result) {
+                                setTeamList(result);
+                                for (int i = 0; i < teamList.size(); i++) {
+                                    teamListBox.addItem(getTeamList().get(i));
+                                }
+                            }
+                        });
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
                 }
 
         );
