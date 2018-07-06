@@ -3,6 +3,7 @@ package com.myTeam.server;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.server.rpc.RemoteServiceServlet;
 import com.myTeam.client.MyTeamService;
+import com.myTeam.client.Team;
 
 import java.sql.*;
 import java.util.ArrayList;
@@ -14,11 +15,12 @@ public class MyTeamServiceImpl extends RemoteServiceServlet implements MyTeamSer
     Connection conn = null;
     PreparedStatement ps = null;
 
+
     public Connection getConnection() throws Exception {
         String driver = "com.mysql.jdbc.Driver";
-        String url = "jdbc:mysql://localhost:PORT/DB_NAME";
-        String username = "USERNAME";
-        String password = "PASSWORD";
+        String url = "jdbc:mysql://localhost:3306/teamdb";
+        String username = "admin";
+        String password = "8520";
         Class.forName(driver);
         Connection conn = DriverManager.getConnection(url, username, password);
         return conn;
@@ -45,21 +47,28 @@ public class MyTeamServiceImpl extends RemoteServiceServlet implements MyTeamSer
             while (rs.next()) {
                 String result = rs.getString(1);
                 categoryList.add(result);
-                GWT.log(categoryList.toString());
             }
         }
         return categoryList;
     }
 
-    public List<String> getTeamswithCategory(int selectedIndex) throws Exception {
-        List<String> teamList = new ArrayList<>();
+    public List<Team> getTeamswithCategory(int selectedIndex) throws Exception {
+        List<Team> teamList = new ArrayList<>();
+
         try (Connection conn = getConnection();
              PreparedStatement ps = psTeamswithCategory(selectedIndex, conn);
              ResultSet rs = ps.executeQuery()) {
             while (rs.next()) {
-                String result = rs.getString(1);
-                teamList.add(result);
-                GWT.log(teamList.toString());
+                Team team = new Team();
+                team.setId(rs.getInt(1));
+                team.setName(rs.getString(2));
+                team.setCity(rs.getString(3));
+                team.setRanking(rs.getInt(4));
+                team.setCategory_id(rs.getInt(5));
+                teamList.add(team);
+                for (int i=6 ; i < teamList.size() ; i++){
+                    System.out.println(teamList.get(i).getName());
+                }
             }
         }
         return teamList;
@@ -78,7 +87,7 @@ public class MyTeamServiceImpl extends RemoteServiceServlet implements MyTeamSer
     }
 
     private PreparedStatement psTeamswithCategory(int selectedIndex, Connection conn) throws SQLException {
-        String query = "SELECT name FROM teams WHERE category_id= ?";
+        String query = "SELECT team_id,name,city,ranking,category_id FROM teams WHERE category_id= ?";
         PreparedStatement ps = conn.prepareStatement(query);
         ps.setInt(1, selectedIndex);
         return ps;

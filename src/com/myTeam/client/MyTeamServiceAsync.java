@@ -7,7 +7,7 @@ import java.util.List;
 public interface MyTeamServiceAsync {
     void getMessage(String msg, AsyncCallback<String> async);
 
-    void getTeamswithCategory(int selectedIndex,AsyncCallback<List<String>> async) throws Exception;
+    void getTeamswithCategory(int selectedIndex,AsyncCallback<List<Team>> async) throws Exception;
 
     void getCategories(AsyncCallback<List<String>> async) throws Exception;
 

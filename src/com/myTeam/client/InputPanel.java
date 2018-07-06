@@ -11,9 +11,9 @@ import java.util.List;
 public class InputPanel extends VerticalPanel {
 
     MyTeamServiceAsync mtAsync = GWT.create(MyTeamService.class);
-    private List<String> teamList;
+    private List<Team> teamList;
     private List<String> categoryList;
-    int selectedIndex = 1;
+    int selectedIndex;
 
     void init() throws Exception {
 
@@ -38,22 +38,23 @@ public class InputPanel extends VerticalPanel {
         });
 
         catListBox.addChangeHandler(event -> {
-
                     teamListBox.clear();
                     selectedIndex = catListBox.getSelectedIndex();
                     selectedIndex = selectedIndex + 1;
                     try {
-                        mtAsync.getTeamswithCategory(selectedIndex, new AsyncCallback<List<String>>() {
+                        mtAsync.getTeamswithCategory(selectedIndex, new AsyncCallback<List<Team>>() {
                             @Override
                             public void onFailure(Throwable caught) {
                                 GWT.log("Error while getting team list!");
                             }
 
                             @Override
-                            public void onSuccess(List<String> result) {
+                            public void onSuccess(List<Team> result) {
                                 setTeamList(result);
+
                                 for (int i = 0; i < teamList.size(); i++) {
-                                    teamListBox.addItem(getTeamList().get(i));
+                                      teamListBox.addItem(getTeamList().get(i).getName()
+                                      );
                                 }
                             }
                         });
@@ -62,7 +63,6 @@ public class InputPanel extends VerticalPanel {
                     }
                 }
         );
-
 
 
         FlexTable ft = new FlexTable();
@@ -78,41 +78,52 @@ public class InputPanel extends VerticalPanel {
         gender.add(rb_male);
         gender.add(rb_female);
 
-        GWT.log(""+teamListBox.getSelectedIndex());
-
-
-        submit.addClickHandler(new ClickHandler() {
+        rb_male.addClickHandler(new ClickHandler() {
             @Override
             public void onClick(ClickEvent event) {
-
-                String genderText="";
-                if(rb_female.isChecked()){
-                    genderText = "Female";
-                }
-                if(rb_male.isChecked()){
-                    genderText = "Male";
-                }
-
-
-
-                int selectedTeamIndex = teamListBox.getSelectedIndex() + 1;
-
-                GWT.log(nameTB.getValue()+" "+surnameTB.getValue()+" "+cityTB.getValue()+" "+genderText+
-                " "+selectedTeamIndex+" ");
-
-                mtAsync.sendInformation(nameTB.getValue(), surnameTB.getValue(),
-                        cityTB.getValue(), genderText, selectedTeamIndex, new AsyncCallback<String>() {
-                            @Override
-                            public void onFailure(Throwable caught) {
-                                System.out.println("Error while inserting..");
-                            }
-
-                            @Override
-                            public void onSuccess(String result) {
-                                System.out.println(result);
-                            }
-                        });
+                rb_female.setValue(false);
+                rb_male.setValue(true);
             }
+        });
+
+        rb_female.addClickHandler(new ClickHandler() {
+            @Override
+            public void onClick(ClickEvent event) {
+                rb_male.setValue(false);
+                rb_female.setValue(true);
+            }
+        });
+
+        submit.addClickHandler(event -> {
+
+            String genderText = "";
+            if (rb_female.isChecked()) {
+                genderText = "Female";
+            }
+            if (rb_male.isChecked()) {
+                genderText = "Male";
+
+            }
+
+
+            int selectedTeamIndex = teamListBox.getSelectedIndex();
+            int team_id = teamList.get(selectedTeamIndex).getId();
+
+            GWT.log(nameTB.getValue() + " " + surnameTB.getValue() + " " + cityTB.getValue() + " " + genderText +
+                    " " + team_id + " ");
+
+            mtAsync.sendInformation(nameTB.getValue(), surnameTB.getValue(),
+                    cityTB.getValue(), genderText, team_id, new AsyncCallback<String>() {
+                        @Override
+                        public void onFailure(Throwable caught) {
+                            System.out.println("Error while inserting..");
+                        }
+
+                        @Override
+                        public void onSuccess(String result) {
+                            System.out.println(result);
+                        }
+                    });
         });
 
         ft.setWidget(1, 1, new Label("Name :"));
@@ -134,13 +145,8 @@ public class InputPanel extends VerticalPanel {
     }
 
 
-    public List<String> getTeamList() {
-        return teamList;
-    }
 
-    public void setTeamList(List<String> teamList) {
-        this.teamList = teamList;
-    }
+
 
     public List<String> getCategoryList() {
         return categoryList;
@@ -148,6 +154,14 @@ public class InputPanel extends VerticalPanel {
 
     public void setCategoryList(List<String> categoryList) {
         this.categoryList = categoryList;
+    }
+
+    public void setTeamList(List<Team> teamList) {
+        this.teamList = teamList;
+    }
+
+    public List<Team> getTeamList() {
+        return teamList;
     }
 }
 

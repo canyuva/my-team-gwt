@@ -2,7 +2,7 @@
   <library name="gwt-user">
     <CLASSES>
       <root url="jar://$USER_HOME$/Documents/gwt-2.8.2/gwt-user.jar!/" />
-      <root url="jar://$PROJECT_DIR$/war/WEB-INF/lib/mysql-connector-java-5.1.46-bin.jar!/" />
+      <root url="jar://$PROJECT_DIR$/driver/mysql-connector-java-5.1.46-bin.jar!/" />
     </CLASSES>
     <JAVADOC />
     <SOURCES>

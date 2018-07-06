@@ -11,5 +11,4 @@
 
     <!-- Specify the app servlets.                   -->
     <servlet path='/MyTeamService' class='com.myTeam.server.MyTeamServiceImpl'/>
-
 </module>
