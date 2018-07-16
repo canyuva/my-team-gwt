@@ -1,10 +1,9 @@
 package com.myTeam.client;
 
 import com.google.gwt.core.client.GWT;
-import com.google.gwt.event.dom.client.ClickEvent;
-import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.*;
+import com.myTeam.server.entities.Team;
 
 import java.util.List;
 
@@ -45,16 +44,14 @@ public class InputPanel extends VerticalPanel {
                         mtAsync.getTeamswithCategory(selectedIndex, new AsyncCallback<List<Team>>() {
                             @Override
                             public void onFailure(Throwable caught) {
-                                GWT.log("Error while getting team list!");
+
                             }
 
                             @Override
                             public void onSuccess(List<Team> result) {
                                 setTeamList(result);
-
-                                for (int i = 0; i < teamList.size(); i++) {
-                                      teamListBox.addItem(getTeamList().get(i).getName()
-                                      );
+                                for (int i = 0; i < categoryList.size(); i++) {
+                                    teamListBox.addItem(getTeamList().get(i).getName());
                                 }
                             }
                         });
@@ -78,20 +75,14 @@ public class InputPanel extends VerticalPanel {
         gender.add(rb_male);
         gender.add(rb_female);
 
-        rb_male.addClickHandler(new ClickHandler() {
-            @Override
-            public void onClick(ClickEvent event) {
-                rb_female.setValue(false);
-                rb_male.setValue(true);
-            }
+        rb_male.addClickHandler(event -> {
+            rb_female.setValue(false);
+            rb_male.setValue(true);
         });
 
-        rb_female.addClickHandler(new ClickHandler() {
-            @Override
-            public void onClick(ClickEvent event) {
-                rb_male.setValue(false);
-                rb_female.setValue(true);
-            }
+        rb_female.addClickHandler(event -> {
+            rb_male.setValue(false);
+            rb_female.setValue(true);
         });
 
         submit.addClickHandler(event -> {
@@ -107,7 +98,7 @@ public class InputPanel extends VerticalPanel {
 
 
             int selectedTeamIndex = teamListBox.getSelectedIndex();
-            int team_id = teamList.get(selectedTeamIndex).getId();
+            int team_id = teamList.get(selectedTeamIndex).getPk_team_id();
 
             GWT.log(nameTB.getValue() + " " + surnameTB.getValue() + " " + cityTB.getValue() + " " + genderText +
                     " " + team_id + " ");
