@@ -1,15 +1,15 @@
 package com.myTeam.server.entities;
 
 
-import com.google.gwt.user.client.rpc.IsSerializable;
 import lombok.Data;
 
 import javax.persistence.*;
+import java.io.Serializable;
 
 @Data
 @Entity
 @Table(name = "TEAM")
-public class Team implements IsSerializable {
+public class Team implements Serializable{
     @Id
     @GeneratedValue
     private int pk_team_id;

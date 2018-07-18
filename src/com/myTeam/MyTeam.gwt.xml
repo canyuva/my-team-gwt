@@ -4,11 +4,9 @@
 
     <!-- Inherit the core Web Toolkit stuff.                  -->
     <inherits name='com.google.gwt.user.User'/>
-
     <!-- Specify the app entry point class.                   -->
     <entry-point class='com.myTeam.client.MyTeam'/>
-
-
     <!-- Specify the app servlets.                   -->
     <servlet path='/MyTeamService' class='com.myTeam.server.MyTeamServiceImpl'/>
+    <source path="shared"/>
 </module>

@@ -9,8 +9,7 @@ import java.util.List;
 @RemoteServiceRelativePath("MyTeamService")
 public interface MyTeamService extends RemoteService {
     // Sample interface method of remote interface
-    List<Team> getTeamswithCategory(int selectedIndex) throws Exception;
-    List<String> getCategories() throws Exception;
+    List<Team> getTeamswithCategory(int selectedIndex);
+    List<String> getCategories();
     String sendInformation(String name, String surname, String city, String gender, int team_id) throws Exception;
-
 }

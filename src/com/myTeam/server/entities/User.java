@@ -3,11 +3,12 @@ package com.myTeam.server.entities;
 import lombok.Data;
 
 import javax.persistence.*;
+import java.io.Serializable;
 
 @Data
 @Entity
 @Table(name = "USER")
-public class User {
+public class User implements Serializable{
     @Id
     @GeneratedValue
     private int pk_user_id;

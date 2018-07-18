@@ -29,8 +29,6 @@ www-test/
 .gwt-tmp/
 
 .gitignore
-.idea/dataSources.local.xml
-.idea/dataSources/
-.idea/workspace.xml
+.idea/
 jar_files/
 out/

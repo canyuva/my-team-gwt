@@ -51,6 +51,7 @@ public class MyTeamServiceImpl extends RemoteServiceServlet implements MyTeamSer
         if(selectedIndex < 1){
             selectedIndex = 1;
         }
+        // Entity Manager ayrı sınıfa yazılacak
         EntityManagerFactory emf = Persistence.createEntityManagerFactory("NewPersistenceUnit");
         EntityManager em = emf.createEntityManager();
         em.getTransaction().begin();
