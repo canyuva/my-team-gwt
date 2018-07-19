@@ -3,15 +3,14 @@ package com.myTeam.server.entities;
 import lombok.Data;
 
 import javax.persistence.*;
-import java.io.Serializable;
 
 @Data
 @Entity
 @Table(name = "CATEGORY")
-public class Category implements Serializable{
+public class Category{
 
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int pk_cat_id;
     @Basic
     @Column(name = "CAT_NAME")

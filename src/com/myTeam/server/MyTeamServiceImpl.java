@@ -1,9 +1,14 @@
 package com.myTeam.server;
 
 import com.google.gwt.user.server.rpc.RemoteServiceServlet;
+import com.myTeam.Conversion;
 import com.myTeam.client.MyTeamService;
 import com.myTeam.server.entities.Category;
 import com.myTeam.server.entities.Team;
+import com.myTeam.server.entities.User;
+import com.myTeam.shared.CategoryDTO;
+import com.myTeam.shared.TeamDTO;
+import com.myTeam.shared.UserDTO;
 
 import javax.persistence.*;
 import java.sql.*;
@@ -24,30 +29,21 @@ public class MyTeamServiceImpl extends RemoteServiceServlet implements MyTeamSer
         return conn;
     }
 
-    public String sendInformation(String name, String surname, String city,
-                                String gender, int team_id) throws Exception {
-        try(Connection conn = getConnection();
-            PreparedStatement ps = psSetInfo(name,surname,city,gender,team_id,conn)) {
-            int i = ps.executeUpdate();
-            if(i < 0){
-                return "Error!!!";
-            }
-        }
-        return "Success";
-    }
 
-    public List<String> getCategories(){
+    public List<CategoryDTO> getCategories(){
         EntityManagerFactory emf = Persistence.createEntityManagerFactory("NewPersistenceUnit");
         EntityManager em = emf.createEntityManager();
         em.getTransaction().begin();
         Category cat = new Category();
-        Query q = em.createQuery("SELECT c.cat_name FROM Category c");
-        List<String> catList = q.getResultList();
+        Query q = em.createQuery("SELECT c FROM Category c");
+        List<Category> catList = q.getResultList();
+        Conversion convert = new Conversion();
+        List<CategoryDTO> catDTOList = convert.fromCategoryToDTO(catList);
         em.getTransaction().commit();
-        return catList;
+        return catDTOList;
     }
 
-    public List<Team> getTeamswithCategory(int selectedIndex) {
+    public List<TeamDTO> getTeamswithCategory(int selectedIndex) {
         if(selectedIndex < 1){
             selectedIndex = 1;
         }
@@ -58,20 +54,20 @@ public class MyTeamServiceImpl extends RemoteServiceServlet implements MyTeamSer
         Query q = em.createQuery("SELECT t FROM Team t WHERE t.fk_category_id=:index");
         q.setParameter("index",selectedIndex);
         List<Team> teamList = q.getResultList();
+        Conversion convert = new Conversion();
+        List<TeamDTO> dtoList = convert.fromTeamToDTO(teamList);
         em.getTransaction().commit();
-        return teamList;
+        return dtoList;
     }
 
-    private PreparedStatement psSetInfo(String name, String surname, String city,
-                                        String gender, int team_id, Connection conn) throws SQLException {
-        String query = "INSERT INTO USER(NAME,SURNAME,CITY,GENDER,FK_TEAM_ID) VALUES(?,?,?,?,?)";
-        PreparedStatement ps = conn.prepareStatement(query);
-        ps.setString(1, name);
-        ps.setString(2, surname);
-        ps.setString(3, city);
-        ps.setString(4, gender);
-        ps.setInt(5, team_id);
-        return ps;
+    public void sendInformation(UserDTO userDTO){
+        EntityManagerFactory emf = Persistence.createEntityManagerFactory("NewPersistenceUnit");
+        EntityManager em = emf.createEntityManager();
+        em.getTransaction().begin();
+        Conversion convert = new Conversion();
+        User user = convert.fromDTOtoUser(userDTO);
+        em.persist(user);
+        em.getTransaction().commit();
     }
 
 }

@@ -1,18 +1,21 @@
 package com.myTeam.client;
 
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.*;
-import com.myTeam.server.entities.Team;
+import com.myTeam.shared.CategoryDTO;
+import com.myTeam.shared.TeamDTO;
+import com.myTeam.shared.UserDTO;
 
 import java.util.List;
 
 public class InputPanel extends VerticalPanel {
 
     MyTeamServiceAsync mtAsync = GWT.create(MyTeamService.class);
-    private List<Team> teamList;
-    private List<String> categoryList;
-    int selectedIndex;
+    private List<TeamDTO> teamList;
+    private List<CategoryDTO> categoryList;
+
 
     void init() throws Exception {
 
@@ -21,43 +24,40 @@ public class InputPanel extends VerticalPanel {
         catListBox.setSelectedIndex(1);
 
 
-        mtAsync.getCategories(new AsyncCallback<List<String>>() {
+        mtAsync.getCategories(new AsyncCallback<List<CategoryDTO>>() {
             @Override
             public void onFailure(Throwable caught) {
-                GWT.log("Error while getting category list!");
+                GWT.log("Error while getting category list from server!");
             }
 
             @Override
-            public void onSuccess(List<String> result) {
+            public void onSuccess(List<CategoryDTO> result) {
                 setCategoryList(result);
                 for (int i = 0; i < categoryList.size(); i++) {
-                    catListBox.addItem(getCategoryList().get(i));
+                    catListBox.addItem(getCategoryList().get(i).getCat_name());
                 }
             }
         });
 
         catListBox.addChangeHandler(event -> {
                     teamListBox.clear();
-                    selectedIndex = catListBox.getSelectedIndex();
-                    selectedIndex = selectedIndex + 1;
-                    try {
-                        mtAsync.getTeamswithCategory(selectedIndex, new AsyncCallback<List<Team>>() {
-                            @Override
-                            public void onFailure(Throwable caught) {
+                    int cat_index = catListBox.getSelectedIndex();
+                    int cat_index_id = getCategoryList().get(cat_index).getPk_cat_id();
 
-                            }
+                    mtAsync.getTeamswithCategory(cat_index_id, new AsyncCallback<List<TeamDTO>>() {
+                        @Override
+                        public void onFailure(Throwable caught) {
+                            GWT.log("Error while getting team list from server!");
+                        }
 
-                            @Override
-                            public void onSuccess(List<Team> result) {
-                                setTeamList(result);
-                                for (int i = 0; i < categoryList.size(); i++) {
-                                    teamListBox.addItem(getTeamList().get(i).getName());
-                                }
+                        @Override
+                        public void onSuccess(List<TeamDTO> result) {
+                            setTeamList(result);
+                            for (int i=0 ; i < teamList.size() ; i++){
+                                teamListBox.addItem(getTeamList().get(i).getName());
                             }
-                        });
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
+                        }
+                    });
                 }
         );
 
@@ -93,26 +93,27 @@ public class InputPanel extends VerticalPanel {
             }
             if (rb_male.isChecked()) {
                 genderText = "Male";
-
             }
 
-
             int selectedTeamIndex = teamListBox.getSelectedIndex();
-            int team_id = teamList.get(selectedTeamIndex).getPk_team_id();
+            int teamId = teamList.get(selectedTeamIndex).getPk_team_id();
 
-            GWT.log(nameTB.getValue() + " " + surnameTB.getValue() + " " + cityTB.getValue() + " " + genderText +
-                    " " + team_id + " ");
+            UserDTO userDTO = new UserDTO();
+            userDTO.setName(nameTB.getValue());
+            userDTO.setSurname(surnameTB.getValue());
+            userDTO.setCity(cityTB.getValue());
+            userDTO.setGender(genderText);
+            userDTO.setFk_team_id(teamId);
 
-            mtAsync.sendInformation(nameTB.getValue(), surnameTB.getValue(),
-                    cityTB.getValue(), genderText, team_id, new AsyncCallback<String>() {
+
+            mtAsync.sendInformation(userDTO, new AsyncCallback<Void>() {
                         @Override
                         public void onFailure(Throwable caught) {
-                            System.out.println("Error while inserting..");
+                            GWT.log("Error while sending information to the server!");
                         }
-
                         @Override
-                        public void onSuccess(String result) {
-                            System.out.println(result);
+                        public void onSuccess(Void result) {
+                            Window.alert("User added !");
                         }
                     });
         });
@@ -136,24 +137,21 @@ public class InputPanel extends VerticalPanel {
     }
 
 
-
-
-
-    public List<String> getCategoryList() {
+    public List<CategoryDTO> getCategoryList() {
         return categoryList;
     }
 
-    public void setCategoryList(List<String> categoryList) {
+    public void setCategoryList(List<CategoryDTO> categoryList) {
         this.categoryList = categoryList;
     }
 
-    public void setTeamList(List<Team> teamList) {
+    public void setTeamList(List<TeamDTO> teamList) {
         this.teamList = teamList;
     }
-
-    public List<Team> getTeamList() {
+    public List<TeamDTO> getTeamList() {
         return teamList;
     }
+
 }
 
 

@@ -8,9 +8,9 @@ import java.io.Serializable;
 @Data
 @Entity
 @Table(name = "USER")
-public class User implements Serializable{
+public class User{
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int pk_user_id;
     @Basic
     @Column(name = "NAME")

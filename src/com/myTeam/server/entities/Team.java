@@ -9,9 +9,9 @@ import java.io.Serializable;
 @Data
 @Entity
 @Table(name = "TEAM")
-public class Team implements Serializable{
+public class Team {
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int pk_team_id;
     @Basic
     @Column(name = "NAME")
