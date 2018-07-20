@@ -37,8 +37,7 @@ public class MyTeamServiceImpl extends RemoteServiceServlet implements MyTeamSer
         Category cat = new Category();
         Query q = em.createQuery("SELECT c FROM Category c");
         List<Category> catList = q.getResultList();
-        Conversion convert = new Conversion();
-        List<CategoryDTO> catDTOList = convert.fromCategoryToDTO(catList);
+        List<CategoryDTO> catDTOList = Conversion.getConvert().fromCategoryToDTO(catList);
         em.getTransaction().commit();
         return catDTOList;
     }
@@ -54,8 +53,7 @@ public class MyTeamServiceImpl extends RemoteServiceServlet implements MyTeamSer
         Query q = em.createQuery("SELECT t FROM Team t WHERE t.fk_category_id=:index");
         q.setParameter("index",selectedIndex);
         List<Team> teamList = q.getResultList();
-        Conversion convert = new Conversion();
-        List<TeamDTO> dtoList = convert.fromTeamToDTO(teamList);
+        List<TeamDTO> dtoList = Conversion.getConvert().fromTeamToDTO(teamList);
         em.getTransaction().commit();
         return dtoList;
     }
@@ -64,8 +62,7 @@ public class MyTeamServiceImpl extends RemoteServiceServlet implements MyTeamSer
         EntityManagerFactory emf = Persistence.createEntityManagerFactory("NewPersistenceUnit");
         EntityManager em = emf.createEntityManager();
         em.getTransaction().begin();
-        Conversion convert = new Conversion();
-        User user = convert.fromDTOtoUser(userDTO);
+        User user = Conversion.getConvert().fromDTOtoUser(userDTO);
         em.persist(user);
         em.getTransaction().commit();
     }

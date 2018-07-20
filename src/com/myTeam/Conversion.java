@@ -12,6 +12,15 @@ import java.util.stream.Collectors;
 
 public final class Conversion {
 
+    public static Conversion convert = null;
+
+    public synchronized static Conversion getConvert(){
+        if(convert == null){
+            convert = new Conversion();
+        }
+        return convert;
+    }
+
     public TeamDTO fromEntitytToTeamDTO (Team team){
         TeamDTO team_dto = new TeamDTO();
 
