@@ -22,15 +22,15 @@ public final class Conversion {
     }
 
     public TeamDTO fromEntitytToTeamDTO (Team team){
-        TeamDTO team_dto = new TeamDTO();
+        TeamDTO teamDTO = new TeamDTO();
 
-        team_dto.setPk_team_id(team.getPk_team_id());
-        team_dto.setName(team.getName());
-        team_dto.setFk_category_id(team.getFk_category_id());
-        team_dto.setRanking(team.getRanking());
-        team_dto.setCity(team.getCity());
+        teamDTO.setPk_team_id(team.getPk_team_id());
+        teamDTO.setName(team.getName());
+        teamDTO.setFk_category_id(team.getFk_category_id());
+        teamDTO.setRanking(team.getRanking());
+        teamDTO.setCity(team.getCity());
 
-        return team_dto;
+        return teamDTO;
     }
 
     public Team fromDTOtoTeamEntity (TeamDTO team_dto){
@@ -97,5 +97,8 @@ public final class Conversion {
         return catList.stream().map(this::fromEntityToCatDTO).collect(Collectors.toList());
     }
 
+    public List<UserDTO> fromUserToDTO (List<User> userList){
+        return userList.stream().map(this::fromEntityToUserDTO).collect(Collectors.toList());
+    }
 
 }

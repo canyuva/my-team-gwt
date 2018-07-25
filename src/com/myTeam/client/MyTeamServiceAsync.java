@@ -11,9 +11,11 @@ import java.util.List;
 public interface MyTeamServiceAsync {
 
 
-    void getCategories(AsyncCallback<List<CategoryDTO>> async) throws Exception;
+    void getCategories(AsyncCallback<List<CategoryDTO>> async);
 
     void getTeamswithCategory(int selectedIndex, AsyncCallback<List<TeamDTO>> async);
 
     void sendInformation(UserDTO userDTO, AsyncCallback<Void> async);
+
+    void getUsers(AsyncCallback<List<UserDTO>> async);
 }

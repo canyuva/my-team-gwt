@@ -14,4 +14,5 @@ public interface MyTeamService extends RemoteService {
     List<TeamDTO> getTeamswithCategory(int selectedIndex);
     List<CategoryDTO> getCategories();
     void sendInformation(UserDTO userDTO);
+    List<UserDTO> getUsers();
 }

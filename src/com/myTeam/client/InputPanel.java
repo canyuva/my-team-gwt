@@ -1,6 +1,8 @@
 package com.myTeam.client;
 
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.*;
@@ -17,7 +19,7 @@ public class InputPanel extends VerticalPanel {
     private List<CategoryDTO> categoryList;
 
 
-    void init() throws Exception {
+    void init() {
 
         ListBox catListBox = new ListBox();
         ListBox teamListBox = new ListBox();
@@ -53,7 +55,7 @@ public class InputPanel extends VerticalPanel {
                         @Override
                         public void onSuccess(List<TeamDTO> result) {
                             setTeamList(result);
-                            for (int i=0 ; i < teamList.size() ; i++){
+                            for (int i = 0; i < teamList.size(); i++) {
                                 teamListBox.addItem(getTeamList().get(i).getName());
                             }
                         }
@@ -69,8 +71,8 @@ public class InputPanel extends VerticalPanel {
         TextBox surnameTB = new TextBox();
         TextBox cityTB = new TextBox();
 
-        RadioButton rb_male = new RadioButton("male", "Male");
-        RadioButton rb_female = new RadioButton("female", "Female");
+        RadioButton rb_male = new RadioButton("Male", "Male");
+        RadioButton rb_female = new RadioButton("Female", "Female");
         FlowPanel gender = new FlowPanel();
         gender.add(rb_male);
         gender.add(rb_female);
@@ -85,16 +87,10 @@ public class InputPanel extends VerticalPanel {
             rb_female.setValue(true);
         });
 
+
         submit.addClickHandler(event -> {
 
-            String genderText = "";
-            if (rb_female.isChecked()) {
-                genderText = "Female";
-            }
-            if (rb_male.isChecked()) {
-                genderText = "Male";
-            }
-
+            String genderText = (rb_female.getValue()) ? rb_female.getText() : rb_male.getText();
             int selectedTeamIndex = teamListBox.getSelectedIndex();
             int teamId = teamList.get(selectedTeamIndex).getPk_team_id();
 
@@ -105,19 +101,23 @@ public class InputPanel extends VerticalPanel {
             userDTO.setGender(genderText);
             userDTO.setFk_team_id(teamId);
 
-
             mtAsync.sendInformation(userDTO, new AsyncCallback<Void>() {
-                        @Override
-                        public void onFailure(Throwable caught) {
-                            GWT.log("Error while sending information to the server!");
-                        }
-                        @Override
-                        public void onSuccess(Void result) {
-                            Window.alert("User added !");
-                        }
-                    });
+                @Override
+                public void onFailure(Throwable caught) {
+                    GWT.log("Error while sending information to the server!");
+                }
+
+                @Override
+                public void onSuccess(Void result) {
+                    Window.alert("User added !");
+                }
+            });
+
+
         });
 
+
+        Button resultButton = new Button("Show Results");
         ft.setWidget(1, 1, new Label("Name :"));
         ft.setWidget(1, 2, nameTB);
         ft.setWidget(2, 1, new Label("Surname :"));
@@ -131,9 +131,18 @@ public class InputPanel extends VerticalPanel {
         ft.setWidget(6, 1, new Label("Team :"));
         ft.setWidget(6, 2, teamListBox);
         ft.setWidget(7, 3, submit);
-
-
+        ft.setWidget(7, 2, resultButton);
+        ft.setCellSpacing(5);
+        ft.setStyleName("flexTable");
         this.add(ft);
+
+        resultButton.addClickHandler(event -> {
+            this.remove(ft);
+            ResultPanel rp = new ResultPanel();
+            rp.init();
+            RootPanel.get("Panel").add(rp);
+        });
+
     }
 
 
@@ -148,6 +157,7 @@ public class InputPanel extends VerticalPanel {
     public void setTeamList(List<TeamDTO> teamList) {
         this.teamList = teamList;
     }
+
     public List<TeamDTO> getTeamList() {
         return teamList;
     }
