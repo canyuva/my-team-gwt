@@ -25,6 +25,10 @@ public class User{
     @Column(name = "GENDER")
     private String gender;
     @Basic
-    @Column(name = "FK_TEAM_ID")
+    @Column
     private int fk_team_id;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "FK_TEAM_ID")
+    private Team team;
 }

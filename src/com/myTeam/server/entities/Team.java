@@ -4,11 +4,12 @@ package com.myTeam.server.entities;
 import lombok.Data;
 
 import javax.persistence.*;
+import java.io.Serializable;
 
 @Data
 @Entity
 @Table(name = "TEAM")
-public class Team {
+public class Team implements Serializable{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int pk_team_id;

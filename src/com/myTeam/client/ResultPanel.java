@@ -36,6 +36,13 @@ public class ResultPanel extends VerticalPanel {
             }
         };
 
+        TextColumn<UserDTO> userTeam = new TextColumn<UserDTO>() {
+            @Override
+            public String getValue(UserDTO user) {
+                return user.getUserTeam().getName();
+            }
+        };
+
         TextColumn<UserDTO> userSurname = new TextColumn<UserDTO>() {
             @Override
             public String getValue(UserDTO user) {
@@ -62,6 +69,7 @@ public class ResultPanel extends VerticalPanel {
         userTable.addColumn(userSurname,"Surname");
         userTable.addColumn(userCity,"City");
         userTable.addColumn(userGender,"Gender");
+        userTable.addColumn(userTeam,"Team");
 
 
         mtAsync.getUsers(new AsyncCallback<List<UserDTO>>() {

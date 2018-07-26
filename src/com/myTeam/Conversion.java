@@ -72,6 +72,7 @@ public final class Conversion {
         user_dto.setGender(user.getGender());
         user_dto.setCity(user.getCity());
         user_dto.setFk_team_id(user.getFk_team_id());
+        user_dto.setUserTeam(fromEntitytToTeamDTO(user.getTeam()));
 
         return user_dto;
     }

@@ -17,4 +17,6 @@ public class UserDTO implements Serializable {
     private String gender;
 
     private int fk_team_id;
+
+    private TeamDTO userTeam;
 }
