@@ -24,3 +24,4 @@ My Team contains football and basketball teams. The users can select the favorit
 9. Click __+__ > From Maven... search `org.hibernate:hibernate-core:5.2.12.Final` and download.
 10. Add Lombok plugin on IDEA -> [link](https://projectlombok.org/setup/intellij)
 11. Edit `persistence.xml` 
+12. Change Processor path at `Preferences... > Build, Execution, Deployment > Compiler > Annotation Processors` with `/_PROJECT_PATH_/lombok-1.16.16.jar`
